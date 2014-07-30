@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<title>Book Tweets</title>
+	<!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap.min.css"> -->
+
+	<!-- Optional theme -->
+	<!-- <link rel="stylesheet" href="//maxcdn.bootstrapcdn.com/bootstrap/3.2.0/css/bootstrap-theme.min.css"> -->
+
+	<link rel="stylesheet" href="static/bootstrap.min.css">
+	<link rel="stylesheet" href="static/bootstrap-theme.min.css">
+	<link rel="stylesheet" href="static/style.css">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+</head>
+<body>
+	<header class="navbar navbar-default" role="banner">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<a href="/" class="navbar-brand">Book Tweets</a>
+			</div>
+			<div>
+				<form method="get" role="form" class="navbar-form navbar-right" role="search">
+					<div class="form-group">
+						<label for="id_bs">Sync twitter API calls</label>
+						<input type="checkbox" id="id_sync" name="sync"{{if .SyncTwitterCalls}} checked{{end}} value="1" />
+					</div>
+					<div class="form-group">
+						<label for="id_bs">Use bootstrapped data</label>
+						<input type="checkbox" id="id_bs" name="bs"{{if .Bootstrapped}} checked{{end}} value="1" />
+					</div>
+					<div class="form-group">
+						<label for="id_query">Search term</label>
+						<input type="text" id="id_query" class="form-control" name="q" value="{{.Query}}" />
+					</div>
+					<button type="submit" class="btn btn-default">Go</button>
+				</form>
+			</div>
+		</div>
+
+
+	</header>
+	<main role="main">
+		<div class="container-fluid">
+			<div class="row">
+				{{if .HasBooks}}
+					{{range .BookList}}
+					<div class="col-lg-6 book">
+						<div class="media">
+							<img src="{{.ImageUrl}}" alt="{{.Title}}" class="media-object pull-left book__image">
+							<div class="media-body">
+								<h4 class="media-heading">{{.Title}}</h4>
+								{{if .HasTweets}}
+								<ul class="list-group">
+									{{range .Tweets}}
+										<li class="list-group-item">@{{.User.ScreenName}}: <em>{{.Text}}</em></li>
+									{{end}}
+								</ul>
+								{{else}}
+								<p class="text-warning">No tweets found</p>
+								{{end}}
+							</div>
+						</div>
+					</div>
+					{{end}}
+				{{else}}
+					<div class="text-center col-12 bg-warning">
+						<p>No books found</p>
+					</div>
+				{{end}}
+			</div>
+		</div>
+	</main>
+</body>
+</html>
