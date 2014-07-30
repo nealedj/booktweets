@@ -1,6 +1,7 @@
 package booktweets
 
 import (
+	"sort"
 	"strings"
 	"sync"
 	"net/url"
@@ -11,6 +12,20 @@ import (
 
 type searchResponse struct {
 	Statuses []anaconda.Tweet
+}
+
+type BooksByTweets []Book
+
+func (b BooksByTweets) Len() int { 
+	return len(b)
+}
+
+func (b BooksByTweets) Swap(i, j int) {
+	b[i], b[j] = b[j], b[i]
+}
+
+func (b BooksByTweets) Less(i, j int) bool {
+	return len(b[i].Tweets) < len(b[j].Tweets)
 }
 
 func getTwitterKeyword(bookTitle string) string {
@@ -60,6 +75,7 @@ func getTweets(c RequestContext, bookList []Book) {
 
 	wg.Wait()
 
+	sort.Sort(sort.Reverse(BooksByTweets(bookList)))
 	PrintAsJson(c, bookList)
 }
 
@@ -97,6 +113,7 @@ func getTweets__WaitWithChannel(c RequestContext, bookList []Book) {
 		<-twitterc
 	}
 
+	sort.Sort(sort.Reverse(BooksByTweets(bookList)))
 	PrintAsJson(c, bookList)
 }
 
@@ -124,6 +141,7 @@ func getTweetsSync(c RequestContext, bookList []Book){
 		c.Infof("Got %d tweets for %s", len(book.Tweets), term)
 	}
 
+	sort.Sort(sort.Reverse(BooksByTweets(bookList)))
 	PrintAsJson(c, bookList)
 }
 
